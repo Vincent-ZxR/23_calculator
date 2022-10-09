@@ -12,7 +12,7 @@ class ReachableNumbers(dict):
     def init_layer0(self):
         from constants import ADD_COST
         # Initiate with the number its own and the direct addition path to 23
-        self[self.number] = NumberPath(0, "23")
+        self[self.number] = NumberPath(0, self.number)
         self[23] = NumberPath(ADD_COST + abs(23 - self.number), f"+{23 - self.number}")
 
     def __str__(self):

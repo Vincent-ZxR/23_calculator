@@ -17,6 +17,7 @@ def find_cost(n: int, nb_layers=3) -> NumberPath:
     numbers_from_n = ReachableNumbers(n)
     numbers_from_n.init_layer0()
     for layer in range(nb_layers):
+        print(layer)
         # Save the reachable numbers from n at layer l-1
         save_numbers_from_n = copy.deepcopy(numbers_from_n)
         # Test all operations
@@ -25,3 +26,6 @@ def find_cost(n: int, nb_layers=3) -> NumberPath:
             for number, path in save_numbers_from_n.items():
                 numbers_from_n.connect(operation(number, max(numbers_from_n[23].cost - path.cost, 0)))
     return numbers_from_n[23]
+
+
+print(find_cost(1101))

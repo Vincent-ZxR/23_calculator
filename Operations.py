@@ -3,7 +3,7 @@ from ReachableNumbers import NumberPath, ReachableNumbers
 """
 For all operations:
     Return all numbers reachable from "number" with a max range of "max_cost".
-    Return None if nothing is reachable within "max_cost" range.
+    Return empty if nothing is reachable within "max_cost" range.
 """
 
 
