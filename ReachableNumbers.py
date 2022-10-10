@@ -10,10 +10,16 @@ class ReachableNumbers(dict):
         super().__init__()
 
     def init_layer0(self):
-        from constants import ADD_COST
+        from constants import ADD_COST, MUL_COST
         # Initiate with the number its own and the direct addition path to 23
-        self[self.number] = NumberPath(0, self.number)
-        self[23] = NumberPath(ADD_COST + abs(23 - self.number), f"+{23 - self.number}")
+        self[self.number] = NumberPath(0, f"{self.number}")
+        if abs(self.number) > 46:
+            quotient = self.number // 23
+            remainder = self.number % 23
+            self[23] = NumberPath(ADD_COST + remainder + MUL_COST + abs(quotient),
+                                  f"({self.number}-{remainder})/{quotient}")
+        else:
+            self[23] = NumberPath(ADD_COST + abs(23 - self.number), f"{self.number}{23 - self.number:+}")
 
     def __str__(self):
         to_print = f"From {self.number}\n"
@@ -41,6 +47,14 @@ class ReachableNumbers(dict):
             else:
                 self[target] = combined_path
 
+    def clean(self):
+        """
+        Remove all value further than the current cost to rach 23
+        """
+        for key in list(self):
+            if self[key] > self[23]:
+                del self[key]
+
 
 class NumberPath(object):
     """
@@ -53,7 +67,9 @@ class NumberPath(object):
         self.operation = operation
 
     def __str__(self):
-        return f"cost {self.cost} with {self.operation[1:-1]}"
+        if self.operation.startswith('(') and self.operation.endswith(')'):
+            return f"cost {self.cost} with {self.operation[1:-1]}"
+        return f"cost {self.cost} with {self.operation}"
 
     def __add__(self, other):
         return NumberPath(self.cost + other.cost, f"({other.operation}{self.operation})")
@@ -63,3 +79,6 @@ class NumberPath(object):
 
     def __lt__(self, other):
         return self.cost < other.cost
+
+    def __len__(self, other):
+        return self.cost <= other.cost
